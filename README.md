@@ -28,7 +28,7 @@ docs/
 
 A GitHub Actions workflow (.github/workflows/validate-docs.yml) automatically validates that the /docs folder exists and contains all required Part 1 files on every push to main.
 
-CI screenshot: to be added
+[CI Build Success](ci-success.png)
 
 ## Video Walkthrough
 
