@@ -24,6 +24,12 @@ docs/
 4. Review docs/api-endpoint-plan.md for the full planned API surface.
 5. Review docs/raceday_erd.png for the data model.
 
+## Design Decisions
+
+- **Result is one-to-one with Enrolment** — a UNIQUE constraint on `enrolment_id` in the Result table ensures each enrolment can only have a single recorded result, preventing duplicate finish times for the same participant in the same category.
+- **Role is stored on the User table** rather than as a separate Roles table — with only two fixed roles (Organiser, Participant), a CHECK constraint keeps the schema simple without sacrificing data integrity.
+- **Venue is separate from Event** so the same venue can be reused across multiple events without duplicating address data.
+
 ## CI/CD
 
 A GitHub Actions workflow (.github/workflows/validate-docs.yml) automatically validates that the /docs folder exists and contains all required Part 1 files on every push to main.
