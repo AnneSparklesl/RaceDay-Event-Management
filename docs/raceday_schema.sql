@@ -14,6 +14,7 @@ GO
 -- ============================================
 
 -- USER Table
+-- Stores both Organisers and Participants, distinguished by the role column.
 CREATE TABLE [User] (
     id INT IDENTITY(1,1) PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -25,6 +26,7 @@ CREATE TABLE [User] (
 GO
 
 -- VENUE Table
+-- Stores physical locations where events are hosted.
 CREATE TABLE Venue (
     id INT IDENTITY(1,1) PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -34,6 +36,7 @@ CREATE TABLE Venue (
 GO
 
 -- EVENT Table
+-- A race event created by an Organiser at a specific Venue.
 CREATE TABLE [Event] (
     id INT IDENTITY(1,1) PRIMARY KEY,
     organiser_id INT NOT NULL FOREIGN KEY REFERENCES [User](id),
@@ -45,6 +48,7 @@ CREATE TABLE [Event] (
 GO
 
 -- CATEGORY Table
+-- A distance/type category within an Event (e.g. Half Marathon, Fun Ride).
 CREATE TABLE Category (
     id INT IDENTITY(1,1) PRIMARY KEY,
     event_id INT NOT NULL FOREIGN KEY REFERENCES [Event](id),
@@ -54,6 +58,7 @@ CREATE TABLE Category (
 GO
 
 -- ENROLMENT Table
+-- Links a Participant to a Category they have entered.
 CREATE TABLE Enrolment (
     id INT IDENTITY(1,1) PRIMARY KEY,
     participant_id INT NOT NULL FOREIGN KEY REFERENCES [User](id),
@@ -63,6 +68,7 @@ CREATE TABLE Enrolment (
 GO
 
 -- RESULT Table
+-- Stores the finish time and position for a completed Enrolment. One-to-one with Enrolment.
 CREATE TABLE [Result] (
     id INT IDENTITY(1,1) PRIMARY KEY,
     enrolment_id INT NOT NULL UNIQUE FOREIGN KEY REFERENCES Enrolment(id),
