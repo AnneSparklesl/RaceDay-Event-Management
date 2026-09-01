@@ -4,6 +4,15 @@ RaceDay is a full-stack web-based event management platform built for the South 
 
 This repository contains the Part 1 planning deliverables: the Entity Relationship Diagram (ERD), the API endpoint plan, and the SQL database script for the RaceDayDB schema.
 
+## Table of Contents
+
+- [Roles](#roles)
+- [Project Structure](#project-structure)
+- [Setup Instructions](#setup-instructions)
+- [Design Decisions](#design-decisions)
+- [CI/CD](#cicd)
+- [Video Walkthrough](#video-walkthrough)
+
 ## Roles
 
 - **Organiser** — can create, edit, and delete events, manage event categories, capture participant results, and view all event enrolments.
