@@ -4,98 +4,98 @@
 **Author:** Annie
 **Part of:** RaceDay PoE – Part 1 (Planning)
 
-This document lists the planned REST API endpoints for the RaceDay Event Management system, based on the RaceDayDB schema (User, Venue, Event, Category, Enrolment, Result). Each entity follows standard CRUD conventions. This is a planning artifact only — no API code has been implemented yet.
+This document lists every planned REST API endpoint for the RaceDay Event Management system, based on the RaceDayDB schema (User, Venue, Event, Category, Enrolment, Result). This is a planning artifact 
+
+**Roles:** None = public, no login required. Any = any logged-in user. Organiser / Participant = restricted to that role.
 
 ---
 
-## 1. User
+## Authentication
 
-| Method | Route | Purpose |
-|--------|-------|---------|
-| GET | /api/users | List all users |
-| GET | /api/users/{id} | Get a single user by id |
-| POST | /api/users | Register a new user (Organiser or Participant) |
-| PUT | /api/users/{id} | Update a user's details |
-| DELETE | /api/users/{id} | Remove a user |
-
-**Notes:** `role` is constrained to `Organiser` or `Participant`. Registration (POST) should hash the password server-side before storing `password_hash`.
+| HTTP Method | Route | Description | Role Required | Request Body | Expected Response |
+|---|---|---|---|---|---|
+| POST | /api/auth/register | Registers a new user as either an Organiser or a Participant | None | `{ name, email, password, role }` | 201 Created – user id and email returned. 409 Conflict – email already registered. |
+| POST | /api/auth/login | Authenticates a user and returns an access token | None | `{ email, password }` | 200 OK – token and user role returned. 401 Unauthorized – invalid email or password. |
 
 ---
 
-## 2. Venue
+## User Profile
 
-| Method | Route | Purpose |
-|--------|-------|---------|
-| GET | /api/venues | List all venues |
-| GET | /api/venues/{id} | Get a single venue by id |
-| POST | /api/venues | Add a new venue |
-| PUT | /api/venues/{id} | Update a venue |
-| DELETE | /api/venues/{id} | Remove a venue |
+| HTTP Method | Route | Description | Role Required | Request Body | Expected Response |
+|---|---|---|---|---|---|
+| GET | /api/users/me | Retrieves the currently logged-in user's profile | Any | None | 200 OK – user profile returned. 401 Unauthorized – not logged in. |
+| PUT | /api/users/me | Updates the currently logged-in user's name or email | Any | `{ name, email }` | 200 OK – updated profile returned. 400 Bad Request – invalid data. |
+| DELETE | /api/users/me | Deletes the currently logged-in user's account | Any | None | 204 No Content – account deleted. 401 Unauthorized – not logged in. |
 
 ---
 
-## 3. Event
+## Venues
 
-| Method | Route | Purpose |
-|--------|-------|---------|
-| GET | /api/events | List all events |
-| GET | /api/events/{id} | Get a single event by id |
-| GET | /api/events/{id}/categories | List all categories for a specific event |
-| POST | /api/events | Create a new event (Organiser only) |
-| PUT | /api/events/{id} | Update an event |
-| DELETE | /api/events/{id} | Remove an event |
-
-**Notes:** `organiser_id` and `venue_id` are foreign keys — creating an Event requires an existing User (Organiser) and Venue.
+| HTTP Method | Route | Description | Role Required | Request Body | Expected Response |
+|---|---|---|---|---|---|
+| GET | /api/venues | Lists all venues | None | None | 200 OK – array of venues. |
+| GET | /api/venues/{id} | Retrieves a single venue by id | None | None | 200 OK – venue returned. 404 Not Found – venue does not exist. |
+| POST | /api/venues | Creates a new venue | Organiser | `{ name, address, city }` | 201 Created – new venue returned. 400 Bad Request – missing required fields. |
+| PUT | /api/venues/{id} | Updates an existing venue | Organiser | `{ name, address, city }` | 200 OK – updated venue returned. 404 Not Found – venue does not exist. |
+| DELETE | /api/venues/{id} | Removes a venue | Organiser | None | 204 No Content – venue deleted. 404 Not Found – venue does not exist. |
 
 ---
 
-## 4. Category
+## Events
 
-| Method | Route | Purpose |
-|--------|-------|---------|
-| GET | /api/categories | List all categories |
-| GET | /api/categories/{id} | Get a single category by id |
-| POST | /api/categories | Add a category to an event |
-| PUT | /api/categories/{id} | Update a category (name, distance) |
-| DELETE | /api/categories/{id} | Remove a category |
-
----
-
-## 5. Enrolment
-
-| Method | Route | Purpose |
-|--------|-------|---------|
-| GET | /api/enrolments | List all enrolments |
-| GET | /api/enrolments/{id} | Get a single enrolment by id |
-| GET | /api/users/{id}/enrolments | List all enrolments for a specific participant |
-| POST | /api/enrolments | Enrol a participant in a category |
-| PUT | /api/enrolments/{id} | Update an enrolment (e.g. change category) |
-| DELETE | /api/enrolments/{id} | Cancel an enrolment |
-
-**Notes:** `participant_id` references User; `category_id` references Category. `enrolment_date` defaults to current timestamp.
+| HTTP Method | Route | Description | Role Required | Request Body | Expected Response |
+|---|---|---|---|---|---|
+| GET | /api/events | Lists all events | None | None | 200 OK – array of events. |
+| GET | /api/events/{id} | Retrieves a single event by id | None | None | 200 OK – event returned. 404 Not Found – event does not exist. |
+| GET | /api/events/{id}/categories | Lists all categories belonging to a specific event | None | None | 200 OK – array of categories. 404 Not Found – event does not exist. |
+| GET | /api/events/{id}/results | Lists all results for a specific event (leaderboard) | None | None | 200 OK – array of results. 404 Not Found – event does not exist. |
+| POST | /api/events | Creates a new event, linking an organiser and a venue | Organiser | `{ venueId, name, eventDate, description }` | 201 Created – new event returned. 404 Not Found – venue does not exist. |
+| PUT | /api/events/{id} | Updates an existing event | Organiser | `{ venueId, name, eventDate, description }` | 200 OK – updated event returned. 403 Forbidden – not the owning organiser. 404 Not Found – event does not exist. |
+| DELETE | /api/events/{id} | Removes an event | Organiser | None | 204 No Content – event deleted. 403 Forbidden – not the owning organiser. 404 Not Found – event does not exist. |
 
 ---
 
-## 6. Result
+## Categories
 
-| Method | Route | Purpose |
-|--------|-------|---------|
-| GET | /api/results | List all results |
-| GET | /api/results/{id} | Get a single result by id |
-| GET | /api/events/{id}/results | List all results for a specific event (leaderboard) |
-| POST | /api/results | Capture a finish time and position for an enrolment |
-| PUT | /api/results/{id} | Update a result |
-| DELETE | /api/results/{id} | Remove a result |
+| HTTP Method | Route | Description | Role Required | Request Body | Expected Response |
+|---|---|---|---|---|---|
+| GET | /api/categories | Lists all categories | None | None | 200 OK – array of categories. |
+| GET | /api/categories/{id} | Retrieves a single category by id | None | None | 200 OK – category returned. 404 Not Found – category does not exist. |
+| POST | /api/categories | Adds a new category to an event | Organiser | `{ eventId, name, distanceKm }` | 201 Created – new category returned. 404 Not Found – event does not exist. |
+| PUT | /api/categories/{id} | Updates an existing category | Organiser | `{ name, distanceKm }` | 200 OK – updated category returned. 404 Not Found – category does not exist. |
+| DELETE | /api/categories/{id} | Removes a category | Organiser | None | 204 No Content – category deleted. 404 Not Found – category does not exist. |
 
-**Notes:** `enrolment_id` is unique on Result — each enrolment can have at most one result, enforced at the database level.
+---
+
+## Event Enrolments
+
+| HTTP Method | Route | Description | Role Required | Request Body | Expected Response |
+|---|---|---|---|---|---|
+| GET | /api/enrolments | Lists all enrolments across all events | Organiser | None | 200 OK – array of enrolments. |
+| GET | /api/users/me/enrolments | Lists the logged-in participant's own enrolments | Participant | None | 200 OK – array of the participant's enrolments. |
+| POST | /api/enrolments | Enrols the logged-in participant in a category | Participant | `{ categoryId }` | 201 Created – new enrolment returned. 404 Not Found – category does not exist. 409 Conflict – already enrolled in this category. |
+| DELETE | /api/enrolments/{id} | Cancels an enrolment (own enrolment, or any if Organiser) | Any | None | 204 No Content – enrolment cancelled. 403 Forbidden – not the enrolment owner. 404 Not Found – enrolment does not exist. |
+
+---
+
+## Results
+
+| HTTP Method | Route | Description | Role Required | Request Body | Expected Response |
+|---|---|---|---|---|---|
+| GET | /api/results | Lists all results | None | None | 200 OK – array of results. |
+| GET | /api/results/{id} | Retrieves a single result by id | None | None | 200 OK – result returned. 404 Not Found – result does not exist. |
+| GET | /api/users/me/results | Lists the logged-in participant's own results | Participant | None | 200 OK – array of the participant's results. |
+| POST | /api/results | Captures a finish time and position for an enrolment | Organiser | `{ enrolmentId, finishTime, position }` | 201 Created – new result returned. 404 Not Found – enrolment does not exist. 409 Conflict – a result already exists for this enrolment. |
+| PUT | /api/results/{id} | Updates an existing result | Organiser | `{ finishTime, position }` | 200 OK – updated result returned. 404 Not Found – result does not exist. |
+| DELETE | /api/results/{id} | Removes a result | Organiser | None | 204 No Content – result deleted. 404 Not Found – result does not exist. |
 
 ---
 
 ## Summary
 
 | Entity | Base Route | Relationships |
-|--------|-----------|----------------|
-| User | /api/users | Referenced by Event (organiser), Enrolment (participant) |
+|---|---|---|
+| User | /api/users, /api/auth | Referenced by Event (organiser), Enrolment (participant) |
 | Venue | /api/venues | Referenced by Event |
 | Event | /api/events | References User, Venue → referenced by Category |
 | Category | /api/categories | References Event → referenced by Enrolment |
