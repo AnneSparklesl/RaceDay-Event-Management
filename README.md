@@ -42,7 +42,7 @@ docs/
 - **Venue is separate from Event** so the same venue can be reused across multiple events without duplicating address data.
 ## Assumptions and Limitations
 
-- Password hashing (e.g. bcrypt) is assumed to be implemented at the application layer in Part 2 — the `password_hash` column simply stores the resulting hash, not plaintext passwords.
+- Password hashing (e.g. bcrypt) is assumed to be implemented at the application layer in Part 2 the `password_hash` column simply stores the resulting hash, not plaintext passwords.
 - Authentication tokens (JWT) are planned but not yet implemented, since no API code is written in Part 1.
 - The current seed data is illustrative only, intended to demonstrate the schema and relationships rather than represent real event data.
 ## CI/CD
