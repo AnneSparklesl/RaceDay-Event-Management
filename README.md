@@ -1,5 +1,5 @@
- ![CI](https://github.com/AnneSparklesl/RaceDay-Event-Management/actions/workflows/validate-docs.yml/badge.svg)
- 
+![CI](https://github.com/AnneSparklesl/RaceDay-Event-Management/actions/workflows/validate-docs.yml/badge.svg)
+
 # RaceDay – Event Management System
 
 RaceDay is a full-stack web-based event management platform built for the South African road running, walking, and cycling community. It allows Event Organisers to create and manage events, categories, and participant results, while Participants can browse upcoming events, enter events, and track their personal performance history.
@@ -12,8 +12,11 @@ This repository contains the Part 1 planning deliverables: the Entity Relationsh
 - [Project Structure](#project-structure)
 - [Setup Instructions](#setup-instructions)
 - [Design Decisions](#design-decisions)
+- [Assumptions and Limitations](#assumptions-and-limitations)
 - [CI/CD](#cicd)
 - [Video Walkthrough](#video-walkthrough)
+- [Roadmap](#roadmap)
+- [Testing Approach (Planned for Part 2)](#testing-approach-planned-for-part-2)
 
 ## Roles
 
@@ -40,11 +43,13 @@ docs/
 - **Result is one-to-one with Enrolment** — a UNIQUE constraint on `enrolment_id` in the Result table ensures each enrolment can only have a single recorded result, preventing duplicate finish times for the same participant in the same category.
 - **Role is stored on the User table** rather than as a separate Roles table — with only two fixed roles (Organiser, Participant), a CHECK constraint keeps the schema simple without sacrificing data integrity.
 - **Venue is separate from Event** so the same venue can be reused across multiple events without duplicating address data.
+
 ## Assumptions and Limitations
 
-- Password hashing (e.g. bcrypt) is assumed to be implemented at the application layer in Part 2 the `password_hash` column simply stores the resulting hash, not plaintext passwords.
+- Password hashing (e.g. bcrypt) is assumed to be implemented at the application layer in Part 2 — the `password_hash` column simply stores the resulting hash, not plaintext passwords.
 - Authentication tokens (JWT) are planned but not yet implemented, since no API code is written in Part 1.
 - The current seed data is illustrative only, intended to demonstrate the schema and relationships rather than represent real event data.
+
 ## CI/CD
 
 A GitHub Actions workflow (.github/workflows/validate-docs.yml) automatically validates that the /docs folder exists and contains all required Part 1 files on every push to main.
@@ -53,4 +58,9 @@ A GitHub Actions workflow (.github/workflows/validate-docs.yml) automatically va
 
 ## Video Walkthrough
 
+The video covers the ERD reasoning, endpoint plan structure, and a live run of the SQL script in SSMS.
+
 YouTube link: https://youtu.be/bQrQu1RlA7k
+
+
+
