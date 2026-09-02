@@ -53,4 +53,4 @@ A GitHub Actions workflow (.github/workflows/validate-docs.yml) automatically va
 
 ## Video Walkthrough
 
-YouTube link: to be added
+YouTube link: https://youtu.be/bQrQu1RlA7k
