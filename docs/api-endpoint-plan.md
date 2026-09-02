@@ -102,3 +102,17 @@ This document lists every planned REST API endpoint for the RaceDay Event Manage
 | Category | /api/categories | References Event → referenced by Enrolment |
 | Enrolment | /api/enrolments | References User, Category → referenced by Result |
 | Result | /api/results | References Enrolment (1:1) |
+
+
+---
+
+## Appendix: Data Dictionary
+
+| Field | Type | Notes |
+|---|---|---|
+| role | string | One of: "Organiser", "Participant" |
+| password | string | Plaintext on input only; server hashes before storing as password_hash |
+| eventDate | datetime | ISO 8601 format, e.g. 2026-10-15T06:00:00 |
+| distanceKm | decimal | Category distance in kilometres, e.g. 42.2 |
+| finishTime | time | Format HH:MM:SS, e.g. 01:45:30 |
+| position | integer | Finishing rank within the category, starting at 1 |
