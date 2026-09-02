@@ -7,6 +7,7 @@
 This document lists every planned REST API endpoint for the RaceDay Event Management system, based on the RaceDayDB schema (User, Venue, Event, Category, Enrolment, Result). This is a planning artifact 
 
 **Roles:** None = public, no login required. Any = any logged-in user. Organiser / Participant = restricted to that role.
+**Authentication approach:** Endpoints marked Any, Organiser, or Participant require a valid bearer token issued by /api/auth/login, sent in the Authorization header. Endpoints marked None are publicly accessible without a token.
 
 ---
 
