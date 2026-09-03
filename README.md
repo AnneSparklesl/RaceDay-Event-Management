@@ -60,7 +60,7 @@ A GitHub Actions workflow (.github/workflows/validate-docs.yml) automatically va
 
 The video covers the ERD reasoning, endpoint plan structure, and a live run of the SQL script in SSMS.
 
-YouTube link: https://youtu.be/Z3LFehCwp7E
+YouTube link: https://youtu.be/xZQG77n0F6w
 
 
 
